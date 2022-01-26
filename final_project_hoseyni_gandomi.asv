@@ -1,0 +1,9 @@
+clc
+clear
+fileName='Data.xlsx';
+Data=xlsread(fileName);
+time=Data(:,1);
+phase=Data(:,3);
+magnitude=Data(:,2);
+marginConver
+semilogx(
