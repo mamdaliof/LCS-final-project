@@ -56,52 +56,22 @@ h=ezplot('x',[0,20]);
 set(h, 'Color', 'r');
 legend('ramp response','y=x')
 %---------------------part C 1-------------------%
-close all
-figure
-C1=db2mag(4);
-C2=(s/6+1)^2
 %----------lead1 start-------------%
-phi_maxLead1=50;
-aLead1=(1+sind(phi_maxLead1))/(1-sind(phi_maxLead1))
-w_mLead1=10;
-TLead1=(w_mLead1*sqrt(aLead1))^(-1)
-K_cLead1=db2mag(8)
-C1=K_cLead1/sqrt(aLead1)*((aLead1*TLead1*s+1)/(TLead1*s+1))
+C1=LeadGenerator(db2mag(7.657),30,4.952);
 %------------lead1 end-----------%
-%------------lead2 start---------%
-phi_maxLead1=15;
-aLead1=(1+sind(phi_maxLead1))/(1-sind(phi_maxLead1))
-w_mLead1=6.2;
-TLead1=(w_mLead1*sqrt(aLead1))^(-1)
-K_cLead1=db2mag(-1)
-C3=K_cLead1/sqrt(aLead1)*((aLead1*TLead1*s+1)/(TLead1*s+1))
-%----------lead2 end-------------%
-%------------lead3 start---------%
-approximateSys=0.3981*(-s/5+1)/(s/5+1)/s/(s^2/25+2/5*0.09752*s+1);
-bode(approximateSys)
-phi_maxLead1=50;
-aLead1=(1+sind(phi_maxLead1))/(1-sind(phi_maxLead1))
-w_mLead1=7;
-TLead1=(w_mLead1*sqrt(aLead1))^(-1)
-K_cLead1=db2mag(0)
-C4=K_cLead1/sqrt(aLead1)*((aLead1*TLead1*s+1)/(TLead1*s+1))
-%----------lead3 end-------------%
+L=minreal(((1+C1*approximateSys)^-1)/s);
+ess=evalfr(L,0)
 %---------lag start-------------%
-K_cL1=257;
-K1L_1=K_cL1-1;
-aL1=1/K_cL1;
-epsilon1=0.1;
-w_mL1=5;
-TL1=1/w_mL1*sqrt((K1L_1/epsilon1)^2-1);
-C2=K_cL1*(aL1*TL1*s+1)/(TL1*s+1);
+C2=LagGenerator(190,4,0.04);
 %--------------- lag end-------------------%
-sys=C1^4*C3^2*C4^2*approximateSys;
+sys=C1*C2*approximateSys;
+figure('name','bode diagram after compensating')
 margin(sys)
-hold on
-bode(C4)
-% hold on
-% bode(C1)
-figure
+figure('name','nyquist diagram after compensating')
 nyquist(sys)
-figure
+figure('name','step response after compensating')
 step(feedback(sys,1))
+figure('name','ramp response after compensating')
+step(feedback(sys,1)/s)
+L=minreal(((1+sys)^-1)/s);
+final_ess=evalfr(L,0)
