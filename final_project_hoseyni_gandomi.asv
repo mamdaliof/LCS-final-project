@@ -24,16 +24,14 @@ zpk(approximateSys)
 figure('name','approximate System')
 margin(approximateSys)
 %---------------------part A 3-------------------%compare bode diagram with data
-x=0:100;
 figure('name','compare');
 bode(approximateSys)
 axes_array = findobj(gcf,'type','axes');
-a=axes_array(2,1);
-hold(a,'on')
-semilogx(axes_array(2,1),(time),magnitudeConverted,'red');
+hold(axes_array(2),'on')
+semilogx((time),magnitudeConverted);
 hold(axes_array(2),'off')
 hold(axes_array(1),'on')
-semilogx(axes_array(1,1),time,phase,'red');
+semilogx(axes_array(1),time,phase);
 
 %---------------------part B 1-------------------%
 figure('name','pzmap')
