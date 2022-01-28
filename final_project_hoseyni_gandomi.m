@@ -34,7 +34,6 @@ semilogx(axes_array(2,1),(time),magnitudeConverted,'red');
 hold(axes_array(2),'off')
 hold(axes_array(1),'on')
 semilogx(axes_array(1,1),time,phase,'red');
-
 %---------------------part B 1-------------------%
 figure('name','pzmap')
 pzmap(approximateSys)
@@ -56,22 +55,33 @@ h=ezplot('x',[0,20]);
 set(h, 'Color', 'r');
 legend('ramp response','y=x')
 %---------------------part C 1-------------------%
-%----------lead1 start-------------%
-C1=LeadGenerator(db2mag(7.657),30,4.952);
-%------------lead1 end-----------%
-L=minreal(((1+C1*approximateSys)^-1)/s);
-ess=evalfr(L,0)
-%---------lag start-------------%
-C2=LagGenerator(190,4,0.04);
-%--------------- lag end-------------------%
-sys=C1*C2*approximateSys;
-figure('name','bode diagram after compensating')
-margin(sys)
-figure('name','nyquist diagram after compensating')
-nyquist(sys)
-figure('name','step response after compensating')
-step(feedback(sys,1))
-figure('name','ramp response after compensating')
-step(feedback(sys,1)/s)
-L=minreal(((1+sys)^-1)/s);
+K=3;
+C1=LagGenerator(84.5,4.5,0.05);
+sys1=K*C1*approximateSys;
+figure('name','bode diagram after compensating1')
+margin(sys1)
+figure('name','nyquist diagram after compensating1')
+nyquist(sys1)
+figure('name','step response after compensating1')
+step(feedback(sys1,1))
+figure('name','ramp response after compensating1')
+step(feedback(sys1,1)/s)
+L=minreal(((1+sys1)^-1)/s);
 final_ess=evalfr(L,0)
+%---------------------part C 2-------------------%
+T = (256*(-0.2*s+1))/((s+4)^4);
+C = minreal(T/((1-T)*approximateSys))
+sys2=C*approximateSys;
+figure('name','bode diagram after compensating2')
+margin(sys2)
+figure('name','nyquist diagram after compensating2')
+nyquist(sys2)
+figure('name','step response after compensating2')
+step(feedback(sys2,1))
+figure('name','ramp response after compensating2')
+step(feedback(sys2,1)/s)
+figure('name', 'controll effort for step response');
+controlEffortStep=C/(1+C*approximateSys);
+step(controlEffortStep)
+figure('name', 'controll effort for ramp response');
+step(controlEffortStep/s)

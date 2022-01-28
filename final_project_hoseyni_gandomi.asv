@@ -56,18 +56,18 @@ h=ezplot('x',[0,20]);
 set(h, 'Color', 'r');
 legend('ramp response','y=x')
 %---------------------part C 1-------------------%
-close all
-figure
-%----------lead1 start-------------%
-C1=LeadGenerator(db2mag(7.657),30,4.952);
-%------------lead1 end-----------%
-%---------lag start-------------%
-
+K=
 %--------------- lag end-------------------%
-sys=C1*approximateSys;
+sys=C1*C2*approximateSys;
+figure('name','bode diagram after compensating')
 margin(sys)
-figure
+figure('name','nyquist diagram after compensating')
 nyquist(sys)
-figure
+figure('name','step response after compensating')
 step(feedback(sys,1))
-L=minreal((1+sys)^-1
+figure('name','ramp response after compensating')
+step(feedback(sys,1)/s)
+L=minreal(((1+sys)^-1)/s);
+final_ess=evalfr(L,0)
+
+
